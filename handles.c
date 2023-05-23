@@ -38,8 +38,10 @@ void handle_cd(char **args)
 
 void handle_env(char **args)
 {
+	 char **env;
+
 	(void) args;
-	for (char **env = environ; *env; env++)
+	for (env = environ; *env; env++)
 	{
 		write(STDOUT_FILENO, *env, _strlen(*env));
 		write(STDOUT_FILENO, "\n", 1);

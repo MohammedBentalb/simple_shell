@@ -11,6 +11,7 @@
 int find_executable(char *cmd, char *path, char **paths)
 {
 	struct stat st;
+	int i;
 
 	if (_strchr(cmd, '/') != NULL)
 	{
@@ -22,7 +23,7 @@ int find_executable(char *cmd, char *path, char **paths)
 	}
 	else
 	{
-	for (int i = 0; paths[i] != NULL; i++)
+	for (i = 0; paths[i] != NULL; i++)
 	{
 	_strcpy(path, paths[i]);
 	_strcat(path, "/");

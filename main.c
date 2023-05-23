@@ -17,6 +17,8 @@ int main(int argc, char **argv, char **envp)
 	char *path = strtok(paths_str, ":");
 	int i = 0;
 	char *paths[MAX_PATHS];
+	int num_chars;
+	int num_tokens;
 
 	(void) argc;
 	environ = envp;
@@ -29,7 +31,7 @@ int main(int argc, char **argv, char **envp)
 	while (1)
 	{
 		write(STDOUT_FILENO, PROMPT, strlen(PROMPT));
-		int num_chars = read(STDIN_FILENO, input, MAX_INPUT_SIZE - 1);
+		num_chars = read(STDIN_FILENO, input, MAX_INPUT_SIZE - 1);
 
 		if (num_chars == 0)
 			exit(0);
@@ -40,7 +42,7 @@ int main(int argc, char **argv, char **envp)
 		continue;
 	}
 	input[num_chars] = '\0';
-	int num_tokens = tokenize_input(input, tokens, MAX_ARGS);
+	num_tokens = tokenize_input(input, tokens, MAX_ARGS);
 
 	if (num_tokens == 0)
 	{
