@@ -18,5 +18,5 @@ char *_getenv(const char *name)
 			return (*env + name_len + 1);
 	env++;
 	}
-return (NULL);
+return (NULL);
 }

@@ -19,5 +19,5 @@ int tokenize_input(char *input, char **tokens, int max_tokens)
 		token = strtok(NULL, " \n");
 	}
 	tokens[i] = NULL;
-return (i);
+return (i);
 }
