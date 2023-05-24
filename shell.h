@@ -1,52 +1,52 @@
-#ifndef SHELL_H
-#define SHELL_H
+#ifndef shell_H
+#define shell_H
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
-#include <string.h>
-#include <sys/wait.h>
 #include <sys/stat.h>
+#include <sys/types.h>
+#include <sys/wait.h>
 #include <fcntl.h>
 #include <errno.h>
-
-
-
-#define MAX_INPUT_SIZE 1024
-#define MAX_ARGS 16
-#define MAX_PATHS 64
-#define PROMPT "$ "
-#define _S_ISREG(m) (((m) & S_IFMT) == S_IFREG)
-#define _stat(cmd, st) (stat(cmd, st))
+#include <signal.h>
 
 extern char **environ;
+extern int errno;
 
-/** main functions */
-int tokenize_input(char *input, char **tokens, int max_tokens);
-int find_executable(char *cmd, char *path, char **paths);
-void execute_command(char **args, char *name, char **paths);
+/**
+ * struct shoosecmd - array contains functions
+ * @st: pointer
+ * @f: Function pointer
+ */
 
-/**  Handlers */
-void handle_clear(char **args);
-void handle_env(char **args);
-void handle_cd(char **args);
-void handle_exit(char **args);
-/**  Error printers */
-void error_msg(char *arg, char *name);
-void error_msg_f(char *arg, char *name);
-void error_msg_d(char *name);
+typedef struct shoosecmd
+{
+char *st;
+int (*f)(char **arr);
+} get_f;
 
-
-/**  Helping function */
-char *_getenv(const char *name);
-int _strcmp(char *s1, char *s2);
-void *_memset(void *s, int c, size_t n);
-char *_strchr(char *s, int c);
-char *_strcpy(char *dest, char *src);
-int _strlen(const char *s);
-int _strncmp(const char *s1, const char *s2, unsigned int n);
-char *_strcat(char *dest, char *src);
+int maker(char *arr[]);
+void ctrc(int j);
 int _atoi(char *s);
-
-
+void type_p(int i);
+int handle_exit(char *line[]);
+int exe_cat(char *arr[]);
+int _getstr(char *str);
+int execute(char **ptr, char **args);
+char **_strbr(char *line, char c);
+int _getline(char **line, size_t *len);
+int _strlen(char *str);
+void _strcpy(char *src, char *dest);
+int _strcmp(char *str, char *equ);
+void _strcat(char *src, char *dest);
+int exe_ls(char **arr);
+int (*getcmd(char *str))(char **arr);
+int exe_echo(char *line[]);
+int exe_un(char **arr);
+int exe_cd(char **arr);
+int exe_pwd(char *arr[]);
+int handle_env(char *line[]);
+char _getchr(void);
+char *hlp_cat(char *st, int n, char *str, char c);
 #endif

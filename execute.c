@@ -1,50 +1,87 @@
 #include "shell.h"
+
 /**
-* execute_command - Function that execute the command
-* @args: arguments
-* @paths: the paths
-* @name: program name
-*/
-void execute_command(char **args, char *name, char **paths)
+ * getcmd - a function which selects a function based on the commands
+ * @str: a command string pointer
+ * Return: returns 1 in success and -1 if it fails.
+ */
+
+int (*getcmd(char *str))(char **arr)
 {
-	char path[MAX_INPUT_SIZE];
+	int i;
+get_f container[] = {
+{"ls", exe_ls},
+{"cd", exe_cd},
+{"l", exe_ls},
+{"ll", exe_ls},
+{"env", handle_env},
+{"printenv", handle_env},
+{"/bin/printenv", handle_env},
+{"/bin/env", handle_env},
+{"exit", handle_exit},
+{"echo", exe_echo},
+{"cat", exe_cat},
+{"pwd", exe_pwd},
+{"mkdir", maker},
+{NULL, NULL}
+};
 
-	if (_strcmp(args[0], "exit") == 0)
+	i = 0;
+	while (!_strcmp(container[i].st, str) && (container[i].st != NULL))
+		i++;
+
+if (container[i].st == NULL)
+	return (NULL);
+
+return (container[i].f);
+}
+
+/**
+ * execute - Function excutes commandds
+ * @ptr: pointer
+ * @args: arguments
+ * Return: returns 1 || -1
+ */
+
+int execute(char **ptr, char **args)
+{
+	int vrf, i = 0;
+
+	if (ptr == NULL)
+		return (1);
+
+	if (getcmd(ptr[0]) == NULL)
 	{
-		if (args[1] != NULL)
-		{
-		int exit_status = _atoi(args[1]);
-
-		exit(exit_status);
-		}
-		handle_exit(args);
+		i = exe_un(ptr);
+	if (i != 0)
+	{
+	for (i = 0; ptr[0][i] != '\0'; i++)
+	{
+	if (args[0][i] == '/')
+	{
+		vrf = 1;
+		break;
 	}
-	else if (_strcmp(args[0], "cd") == 0)
-		handle_cd(args);
-	else if (_strcmp(args[0], "clear") == 0)
-	handle_clear(args);
-	else if (_strcmp(args[0], "env") == 0)
-		handle_env(args);
+	}
+	if (vrf == 1)
+	{
+		write(1, args[0], _strlen(args[0]));
+		write(1, ": ", 3);
+		write(1, ptr[0], _strlen(ptr[0]));
+		write(1, ": No such file or directory\n", 28);
+		exit(1);
+	}
 	else
 	{
-	if (find_executable(args[0], path, paths))
+		write(1, ptr[0], _strlen(ptr[0]));
+		write(1, ": not found\n", _strlen(": not found\n"));
+		exit(1);
+	}
+	}
+	}
+	else
 	{
-		pid_t pid = fork();
-
-		if (pid == 0)
-		{
-		if (execve(path, args, NULL) == -1)
-		{
-		error_msg(args[0], name);
-		_exit(EXIT_FAILURE);
-		}
-		}
-		else if (pid > 0)
-			wait(NULL);
-		else
-			error_msg_f(args[0], name);
+	getcmd(ptr[0])(ptr);
 	}
-		else
-			error_msg_d(name);
-	}
+return (1);
 }
